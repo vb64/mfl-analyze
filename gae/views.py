@@ -2,6 +2,7 @@ import logging, json
 
 from google.appengine.api import taskqueue
 
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
@@ -17,7 +18,7 @@ def mainpage(request):
 def data_put(request):
 
     if request.method != 'POST':
-        return HttpResponse('OK')
+        return render(request, 'api.html', {})
 
     r = models.Request()
     r.put()
