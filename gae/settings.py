@@ -2,7 +2,6 @@
 
 #DEBUG = True
 DEBUG = False
-
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -10,7 +9,6 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
 TIME_ZONE = 'UTC'
 
 # Language code for this installation. All choices can be found here:
@@ -18,9 +16,6 @@ TIME_ZONE = 'UTC'
 LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '97l5)z3aj_go!-#n$xmacuj2!2b*p1u)l!)ggvr6))&hi*b!u-'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
