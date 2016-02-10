@@ -45,9 +45,12 @@ def data_do(request):
         logging.warning("task id not exist: %s" % data_id)
         return HttpResponse('OK')
 
-    data = store.get("%s" % data_id)
+    file_name = "%s" % data_id
+    data = store.get(file_name)
     if data:
         data = zlib.decompress(data)
+
+    store.remove(file_name)
 
     ###########################
     # emulate longtime analyze
