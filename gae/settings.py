@@ -39,5 +39,3 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.core.context_processors.debug',
 )
-
-appspot_id = 'mfl-pipetechnology'

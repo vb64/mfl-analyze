@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import models, gcs, mfl
 
-store = gcs.Session(settings.appspot_id)
+store = gcs.Session('mfl-pipetechnology')
 
 def mainpage(request):
     return render(request, 'main.html', {})
