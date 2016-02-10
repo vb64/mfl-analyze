@@ -62,8 +62,7 @@ def data_do(request):
     answer = {"zoomDataFormat": 1}
 
     try:
-        data = json.loads(request.POST.get('data', ''))
-        answer["result"] = mfl.analyze(data)
+        answer["result"] = mfl.analyze(json.loads(data))
         answer["status"] = "ok"
         r.status = 1
 
