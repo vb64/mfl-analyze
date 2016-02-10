@@ -1,3 +1,18 @@
+"""
+You will need to activate your project for GCS.
+Then grant your app permission to use your bucket in Google Cloud Console:
+Enable billing for this project
+Set 'Bucket Permissions' as describe here: https://cloud.google.com/storage/docs/cloud-console#_bucketpermission
+
+You need set:
+
+ENTITY - User
+NAME - app-id@appspot.gserviceaccount.com
+ACCESS  - Owner
+
+Don't forget to restrict daily budget. By default its unlimited ;)
+"""
+
 import logging
 import cloudstorage
 
