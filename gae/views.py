@@ -1,4 +1,4 @@
-import logging, json
+import logging, json, zlib
 
 from google.appengine.api import taskqueue
 
@@ -9,7 +9,9 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-import models, mfl
+import models, gcs, mfl
+
+store = gcs.Session(settings.appspot_id)
 
 def mainpage(request):
     return render(request, 'main.html', {})
@@ -24,9 +26,10 @@ def data_put(request):
     r.put()
 
     data_id = r.key().id()
-    data = request.POST.get('data', '')
 
-    taskqueue.add(url=reverse('api_do', None, [], {}), method="POST", params={'key': data_id, 'data':data})
+    # save data to file into gcs, because it size can exceed taskqueue payload capacity (~ 100 Kb)
+    store.put("%s" % data_id, zlib.compress(request.POST.get('data', '')))
+    taskqueue.add(url=reverse('api_do', None, [], {}), method="POST", params={'key': data_id})
     return redirect(reverse('api_get', None, [], {'questid': data_id, }))
 
 @csrf_exempt
@@ -41,6 +44,10 @@ def data_do(request):
     if r is None:
         logging.warning("task id not exist: %s" % data_id)
         return HttpResponse('OK')
+
+    data = store.get("%s" % data_id)
+    if data:
+        data = zlib.decompress(data)
 
     ###########################
     # emulate longtime analyze
