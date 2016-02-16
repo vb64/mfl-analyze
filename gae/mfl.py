@@ -1,23 +1,29 @@
-min_size = 4 # minimum size (any dimension) of input matrix
+import anomaly
+
+accepted_data_types = ["MFL"]
 
 def analyze(data):
 
-    row_data = data["dataRow"]
+    data_type = data.get("dataType", "")
+    if data_type not in accepted_data_types:
+        raise Exception("dataType: '%s' is not supported" % data_type)
 
-    size_x = len(row_data)
-    size_y = len(row_data[0])
+    row_data = data["dataRow"]
+    size_y = len(data[0])
     #raw_input("matrix size: %dx%d" % (size_x, size_y))
 
-    # check for minimum matrix size
-    if size_y < min_size or size_x < min_size:
-        raise Exception("wrong source matrix size: %dx%d minimum size is %d" % (size_x, size_y, min_size))
+    # find line with maximum amplitude
+    line_index = 0
+    max_amplitude = anomaly.Item(line_index, row_data).amplitude
+    for i in range(1, size_y):
+        amplitude = anomaly.Item(i, row_data).amplitude
+        if amplitude > max_amplitude:
+            max_amplitude = amplitude
+            line_index = i
 
-    y = size_y / 4
-    x = size_x / 4
+    # defect sizes by x and y
+    x0, y0, x, y = anomaly.Item(line_index, row_data).rectangle()
 
     return [
-        [0,          0,          x, y, 80],
-        [size_x - x, 0,          x, y, 70],
-        [0,          size_y - y, x, y, 60],
-        [size_x - x, size_y - y, x, y, 50],
+        [x0, y0, x, y, 80],
     ]
