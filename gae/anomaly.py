@@ -5,12 +5,12 @@ class Item(object):
 
     >>> dat = [ \
         [3, 13, 23, 13],   \
-        [2, 12, 22, 12],   \
-        [3, 13, 23, 13],   \
-        [4, 14, 24, 14],   \
-        [7, 17, 27, 17],   \
-        [3, 13, 23, 13],   \
-        [2, 12, 22, 12],   \
+        [2, 12, 32, 12],   \
+        [3, 23, 23, 23],   \
+        [4, 34, 44, 34],   \
+        [7, 47, 57, 47],   \
+        [3, 33, 43, 33],   \
+        [2, 22, 22, 22],   \
         [1, 11, 21, 11]    \
     ]
     >>> defect = Item(0, dat)
@@ -46,10 +46,11 @@ class Item(object):
 
     def rectangle(self, width_signal_fading=10):
         ampl_position = self.deltas.index(self.ampl_value)
-        pos_left = ampl_position - 1 - list(reversed(self.deltas[:ampl_position])).index(0)
 
+        pos_left = ampl_position - 1 - list(reversed(self.deltas[:ampl_position])).index(0)
         pos_right = len(self.deltas) - 1
-        # if no h0 level after maximum
+
+        # if no h0 level into sensor data after maximum
         try:
             pos_right = ampl_position + 1 + self.deltas[ampl_position+1:].index(0)
         except:
