@@ -1,7 +1,7 @@
 class Item(object):
     """
-    Extracting an array of measurements of sensor for line_index from whole array data.
-    Calculate maximum amplitude, x and y sizes for this sensor.
+    Extracting an array of measurements of sensor with line_index from whole array data.
+    Calculate maximum amplitude, h0 and geometry size (rectangle) for anomaly.
 
     >>> dat = [ \
         [1, 11, 21, 11],   \
@@ -20,8 +20,6 @@ class Item(object):
     1
     >>> defect.amplitude
     4
-    >>> defect.ampl_position
-    4
     >>> defect.rectangle()
     (0, 0, 8, 4)
 
@@ -30,20 +28,22 @@ class Item(object):
     def __init__(self, line_index, data):
         self.line_index = line_index
         self.source_data = data
-
-        size_x = len(data)
-        self.sensor_data = [data[x][line_index] for x in range(size_x)]
-        self.h0 = self.sensor_data[0]
+        self.sensor_data = [data[x][line_index] for x in range(len(data))]
         self.deltas = map(lambda x: x - self.h0, self.sensor_data)
         self.ampl_value = max(self.deltas)
-        self.ampl_position = self.deltas.index(self.ampl_value)
 
     @property
     def amplitude(self):
         """Maximum amplitude for the line of sensor data"""
         return self.ampl_value
 
+    @property
+    def h0(self):
+        """Middle level of sensor signal"""
+        return self.sensor_data[0]
+
     def rectangle(self, width_signal_fading=10):
+        ampl_position = self.deltas.index(self.ampl_value)
         return 0, 0, len(self.source_data), len(self.source_data[0])
 
 if __name__ == "__main__":
