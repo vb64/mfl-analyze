@@ -4,24 +4,26 @@ class Item(object):
     Calculate maximum amplitude, h0 and geometry size (rectangle) for anomaly.
 
     >>> dat = [ \
-        [1, 11, 21, 11],   \
+        [3, 13, 23, 13],   \
         [2, 12, 22, 12],   \
         [3, 13, 23, 13],   \
         [4, 14, 24, 14],   \
-        [5, 15, 25, 15],   \
+        [7, 17, 27, 17],   \
         [3, 13, 23, 13],   \
         [2, 12, 22, 12],   \
         [1, 11, 21, 11]    \
     ]
     >>> defect = Item(0, dat)
     >>> defect.sensor_data
-    [1, 2, 3, 4, 5, 3, 2, 1]
+    [3, 2, 3, 4, 7, 3, 2, 1]
+    >>> defect.deltas
+    [0, -1, 0, 1, 4, 0, -1, -2]
     >>> defect.h0
-    1
+    3
     >>> defect.amplitude
     4
     >>> defect.rectangle()
-    (0, 0, 8, 4)
+    (2, 0, 3, 4)
 
     """
 
@@ -44,7 +46,16 @@ class Item(object):
 
     def rectangle(self, width_signal_fading=10):
         ampl_position = self.deltas.index(self.ampl_value)
-        return 0, 0, len(self.source_data), len(self.source_data[0])
+        pos_left = ampl_position - 1 - list(reversed(self.deltas[:ampl_position])).index(0)
+
+        pos_right = len(self.deltas) - 1
+        # if no h0 level after maximum
+        try:
+            pos_right = ampl_position + 1 + self.deltas[ampl_position+1:].index(0)
+        except:
+            pass
+
+        return pos_left, 0, pos_right - pos_left, len(self.source_data[0])
 
 if __name__ == "__main__":
     import doctest
