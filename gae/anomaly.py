@@ -1,4 +1,4 @@
-DFLT_FADING_PERCENT = 10
+DFLT_FADING_PERCENT = 50
 
 class Item(object):
     """

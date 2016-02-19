@@ -1,4 +1,4 @@
-import anomaly
+import anomaly, depth
 
 accepted_data_types = ["MFL"]
 
@@ -9,7 +9,7 @@ def analyze(data):
         raise Exception("dataType: '%s' is not supported" % data_type)
 
     row_data = data["dataRow"]
-    size_y = len(data[0])
+    size_y = len(row_data[0])
     #raw_input("matrix size: %dx%d" % (size_x, size_y))
 
     # find line with maximum amplitude
@@ -22,8 +22,13 @@ def analyze(data):
             line_index = i
 
     # defect sizes by x and y
-    x0, y0, x, y = anomaly.Item(line_index, row_data).rectangle()
+    defect = anomaly.Item(line_index, row_data)
+    x0, y0, x, y = defect.rectangle()
 
     return [
-        [x0, y0, x, y, 80],
+        [x0, y0, x, y, depth.calculate(x, defect.h0, defect.amplitude, False)],
     ]
+
+if __name__ == "__main__":
+    import json
+    print analyze(json.loads(open("data01.json", "r").read()))
