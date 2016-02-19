@@ -47,16 +47,29 @@ class Item(object):
     def rectangle(self, width_signal_fading=10):
         ampl_position = self.deltas.index(self.ampl_value)
 
-        pos_left = ampl_position - 1 - list(reversed(self.deltas[:ampl_position])).index(0)
+        pos_left = ampl_position - 1 - index_le(reversed(self.deltas[:ampl_position]), 0)
         pos_right = len(self.deltas) - 1
 
         # if no h0 level into sensor data after maximum
         try:
-            pos_right = ampl_position + 1 + self.deltas[ampl_position+1:].index(0)
+            pos_right = ampl_position + 1 + index_le(self.deltas[ampl_position+1:], 0)
         except:
             pass
 
         return pos_left, 0, pos_right - pos_left, len(self.source_data[0])
+
+def index_le(sequence, value):
+    """
+    Find first element in numeric sequence, then less or equal value.
+    Return index in sequence for this element.
+    If element not found, raise exception.
+    """
+    i = 0
+    for item in sequence:
+        if item <= value:
+            return i
+        i += 1
+    raise Exception
 
 if __name__ == "__main__":
     import doctest
