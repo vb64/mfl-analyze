@@ -1,7 +1,7 @@
 import anomaly, depth
 
 accepted_data_types = ["MFL"]
-MINIMAL_PERCENT = 5
+MINIMAL_PERCENT = 10
 
 class Item(object):
 
