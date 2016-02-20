@@ -1,7 +1,7 @@
 import anomaly, depth
 
 accepted_data_types = ["MFL"]
-MINIMAL_PERCENT = 5
+MINIMAL_PERCENT = 10
 
 class Item(object):
 
@@ -61,7 +61,9 @@ def clear_rectangle(data, x0, y0, x, y):
     [1, 11, 21, 11]
 
     """
-    pass
+    for i in range(x0, x0+x):
+        for j in range(y0, y0+y):
+            data[i][j] = data[0][j]
 
 def analyze(data):
 
