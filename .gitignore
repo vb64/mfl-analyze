@@ -2,4 +2,6 @@
 appengine-generated/
 *.db-journal
 *.db
+*.pyc
 xsrf
+/gae/*.pyc
