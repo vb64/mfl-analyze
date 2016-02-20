@@ -3,7 +3,7 @@ import anomaly, depth
 accepted_data_types = ["MFL"]
 MINIMAL_PERCENT = 10
 
-class Item(object):
+class Defect(object):
 
     def __init__(self, data):
         size_y = len(data[0])
@@ -66,7 +66,37 @@ def clear_rectangle(data, x0, y0, x, y):
             data[i][j] = data[0][j]
 
 def analyze(data):
+    """
+    >>> dat = { \
+      "dataType": "MFL",      \
+      "magnetID": "EPRO700",  \
+      "isInside": 0,          \
+      "dataRow": [            \
+        [3, 13, 23, 13],   \
+        [2, 12, 32, 12],   \
+        [3, 23, 23, 23],   \
+        [4, 34, 44, 34],   \
+        [7, 47, 57, 47],   \
+        [3, 33, 43, 33],   \
+        [2, 22, 22, 22],   \
+        [1, 11, 21, 11]    \
+      ],                   \
+      "dataFilt": [        \
+        [3, 13, 23, 13],   \
+        [2, 12, 32, 12],   \
+        [3, 23, 23, 23],   \
+        [4, 34, 44, 34],   \
+        [7, 47, 57, 47],   \
+        [3, 33, 43, 33],   \
+        [2, 22, 22, 22],   \
+        [1, 11, 21, 11]    \
+      ],                   \
+      "zoomDataFormat": 1  \
+    }
+    >>> analyze(dat)
+    [3, 13, 23, 13]
 
+    """
     data_type = data.get("dataType", "")
     if data_type not in accepted_data_types:
         raise Exception("dataType: '%s' is not supported" % data_type)
