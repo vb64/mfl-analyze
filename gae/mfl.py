@@ -4,7 +4,8 @@ accepted_data_types = ["MFL"]
 MINIMAL_PERCENT = 10
 
 class Defect(object):
-
+    """
+    """
     def __init__(self, data):
         size_y = len(data[0])
         line_index = 0
@@ -19,6 +20,27 @@ class Defect(object):
         defect = anomaly.Item(line_index, data)
         self.x0, self.y0, self.x, self.y = defect.rectangle()
         self.depth = depth.calculate(self.x, defect.h0, defect.amplitude, False)
+
+    @property
+    def x1(self):
+        return self.x0 + self.x
+
+    @property
+    def y1(self):
+        return self.y0 + self.y
+
+    def isIntercept(self, rect):
+        if (self.y0 > rect.y1) or (self.y1 < rect.y0):
+            return False
+        if (self.x0 > rect.x1) or (self.x1 < rect.x0):
+            return False
+        return True
+
+    def isNear(self, defects):
+        for d in defects:
+            if self.isIntercept(d):
+                return True
+        return False
 
     def __str__(self):
         return "%d%% x0:%d y0:%d x:%d y:%d" % (self.depth, self.x0, self.y0, self.x, self.y)
@@ -103,7 +125,7 @@ def analyze(data):
       "zoomDataFormat": 1  \
     }
     >>> analyze(dat)
-    [[1, 0, 6, 3, 85], [1, 2, 6, 1, 85]]
+    [[1, 0, 6, 3, 85]]
 
     """
     data_type = data.get("dataType", "")
@@ -116,14 +138,15 @@ def analyze(data):
     #raw_input("matrix size: %dx%d" % (size_x, size_y))
 
     while d.depth >= MINIMAL_PERCENT:
-        result.append([d.x0, d.y0, d.x, d.y, d.depth])
+        if not d.isNear(result):
+            result.append(d)
         clear_rectangle(row_data, d.x0, d.y0, d.x, d.y)
         d1 = Defect(row_data)
         if d == d1:
             break
         d = d1
 
-    return result
+    return [[d.x0, d.y0, d.x, d.y, d.depth] for d in result]
 
 if __name__ == "__main__":
     #import json
