@@ -20,6 +20,15 @@ class Defect(object):
         self.x0, self.y0, self.x, self.y = defect.rectangle()
         self.depth = depth.calculate(self.x, defect.h0, defect.amplitude, False)
 
+    def __str__(self):
+        return "%d%% x0:%d y0:%d x:%d y:%d" % (self.depth, self.x0, self.y0, self.x, self.y)
+
+    def __eq__(self, other):
+        return all((self.x0 == other.x0, self.y0 == other.y0, self.x == other.x, self.y == other.y))
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 def clear_rectangle(data, x0, y0, x, y):
     """
     >>> dat = [ \
@@ -94,7 +103,7 @@ def analyze(data):
       "zoomDataFormat": 1  \
     }
     >>> analyze(dat)
-    [3, 13, 23, 13]
+    [[1, 0, 6, 3, 85], [1, 2, 6, 1, 85]]
 
     """
     data_type = data.get("dataType", "")
@@ -109,7 +118,10 @@ def analyze(data):
     while d.depth >= MINIMAL_PERCENT:
         result.append([d.x0, d.y0, d.x, d.y, d.depth])
         clear_rectangle(row_data, d.x0, d.y0, d.x, d.y)
-        d = Defect(row_data)
+        d1 = Defect(row_data)
+        if d == d1:
+            break
+        d = d1
 
     return result
 
