@@ -125,7 +125,7 @@ def analyze(data):
       "zoomDataFormat": 1  \
     }
     >>> analyze(dat)
-    [[1, 0, 6, 3, 85]]
+    [[1, 0, 6, 3, 85, 1]]
 
     """
     data_type = data.get("dataType", "")
@@ -146,7 +146,7 @@ def analyze(data):
             break
         d = d1
 
-    return [[d.x0, d.y0, d.x, d.y, d.depth] for d in result]
+    return [[d.x0, d.y0, d.x, d.y, d.depth, 1] for d in result]
 
 if __name__ == "__main__":
     #import json
